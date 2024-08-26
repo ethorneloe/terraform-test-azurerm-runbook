@@ -96,7 +96,7 @@ resource "azurerm_automation_variable_string" "this" {
   encrypted               = each.value.encrypted
 }
 
-resource "azapi_update_resource" "toggle_schedule" {
+resource "azapi_resource" "toggle_schedule" {
   for_each = { for schedule in var.schedules : schedule.name => schedule }
 
   type = "Microsoft.Automation/automationAccounts/schedules@2023-11-01"
@@ -104,7 +104,7 @@ resource "azapi_update_resource" "toggle_schedule" {
 
   body = jsonencode({
     "properties" = {
-      "isEnabled" = each.value.enabled
+      "isEnabled" = "false"
     }
   })
 
