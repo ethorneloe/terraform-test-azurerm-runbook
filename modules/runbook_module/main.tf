@@ -102,7 +102,7 @@ resource "azapi_update_resource" "toggle_schedule" {
   type = "Microsoft.Automation/automationAccounts/schedules@2023-11-01"
   resource_id = "${var.automation_account_resource_id}/schedules/${each.key}"
 
-  body {
+  body = {
     properties = {
       isEnabled = each.value.enabled
     }
