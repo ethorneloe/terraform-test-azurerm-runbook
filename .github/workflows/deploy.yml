@@ -30,6 +30,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Needed for the local exec portion of the runbook module
+      - name: Authenticate to azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.CLIENT_ID}}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
