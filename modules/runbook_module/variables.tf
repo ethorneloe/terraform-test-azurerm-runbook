@@ -13,6 +13,11 @@ variable "automation_account_name" {
   description = "Automation Account name"
 }
 
+variable "automation_account_resource_id" {
+  type        = string
+  description = "Automation Account resource id"
+}
+
 variable "tags" {
   type        = map(any)
   description = "Resource tags"
