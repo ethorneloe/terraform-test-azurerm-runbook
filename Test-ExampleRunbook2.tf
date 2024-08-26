@@ -8,6 +8,10 @@ variable "secret2" {
 module "Runbook2" {
   source = "./modules/runbook_module"
 
+  providers = {
+    azapi = azapi
+  }
+
   resource_group_name = var.resource_group_name
   automation_account_name = var.automation_account_name
   location = var.location
