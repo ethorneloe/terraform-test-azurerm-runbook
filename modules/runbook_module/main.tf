@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    azapi = {
-      source = "Azure/azapi"
-    }
-  }
-}
-
 resource "azurerm_automation_runbook" "this" {
   name                    = var.runbook.name
   location                = var.location
