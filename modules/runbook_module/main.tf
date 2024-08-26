@@ -102,11 +102,11 @@ resource "azapi_update_resource" "toggle_schedule" {
   type = "Microsoft.Automation/automationAccounts/schedules@2023-11-01"
   resource_id = "${var.automation_account_resource_id}/schedules/${each.value.name}"
 
-  body = {
+  body = jsonencode({
     properties = {
       isEnabled = each.value.enabled
     }
-  }
+  })
 
   depends_on = [azurerm_automation_schedule.this]
 }
