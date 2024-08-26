@@ -104,7 +104,7 @@ resource "null_resource" "toggle_schedule" {
   }
 
   provisioner "local-exec" {
-    command = "az rest --method patch --url \"https://management.azure.com/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Automation/automationAccounts/${var.automation_account_name}/schedules/${each.value.name}?api-version=2023-11-01\" --body \"{'properties':{'isEnabled':${each.value.enabled}}}\""
+    command = "az rest --method patch --url \"https://management.azure.com/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Automation/automationAccounts/${var.automation_account_name}/schedules/${each.value.name}?api-version=2023-11-01\" --body \"{'properties':{'isEnabled':'${each.value.enabled}'}}\""
   }
 
   depends_on = [azurerm_automation_schedule.this]
