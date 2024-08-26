@@ -104,7 +104,7 @@ resource "azapi_update_resource" "toggle_schedule" {
 
   body = jsonencode({
     properties = {
-      isEnabled = each.value.enabled
+      blabla = each.value.enabled
     }
   })
 
