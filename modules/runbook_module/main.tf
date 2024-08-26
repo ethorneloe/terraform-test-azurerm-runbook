@@ -96,15 +96,16 @@ resource "azurerm_automation_variable_string" "this" {
   encrypted               = each.value.encrypted
 }
 
-resource "null_resource" "toggle_schedule" {
-  for_each = { for i in var.schedules : i.name => i }
+resource "azapi_update_resource" "toggle_schedule" {
+  for_each = { for schedule in var.schedules : schedule.name => schedule }
 
-  triggers = {
-    enabled = each.value.enabled
-  }
+  type = "Microsoft.Automation/automationAccounts/schedules@2023-11-01"
+  resource_id = "${azurerm_automation_account.example.id}/schedules/${each.key}"
 
-  provisioner "local-exec" {
-    command = "az automation schedule update --automation-account-name ${var.automation_account_name} --resource-group ${var.resource_group_name} --name ${each.value.name} --is-enabled ${each.value.enabled}"
+  body {
+    properties = {
+      isEnabled = each.value.enabled
+    }
   }
 
   depends_on = [azurerm_automation_schedule.this]
