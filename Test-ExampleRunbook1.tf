@@ -8,9 +8,9 @@ variable "secret1" {
 module "runbook1" {
   source = "./modules/runbook_module"
 
-  resource_group_name = azurerm_resource_group.existing.name
-  automation_account_name = azurerm_automation_account.existing.name
-  automation_account_resource_id = azurerm_automation_account.existing.id
+  resource_group_name = data.azurerm_resource_group.existing.name
+  automation_account_name = data.azurerm_automation_account.existing.name
+  automation_account_resource_id = data.azurerm_automation_account.existing.id
   location = var.location
 
   runbook = {
