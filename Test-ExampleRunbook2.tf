@@ -6,7 +6,7 @@ variable "secret2" {
 }
 
 module "Runbook2" {
-  source = "./modules/runbook_module"
+  source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=feature/add-runs-on-and-automation-variables"
 
   subscription_id = data.azurerm_subscription.current.subscription_id
   resource_group_name = data.azurerm_resource_group.existing.name
