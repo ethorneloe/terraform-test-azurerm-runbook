@@ -17,6 +17,10 @@ jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
+    env:
+      # Testing TF_VAR for secrets
+      TF_VAR_secret1: ${{ secrets.secret1 }}
+      TF_VAR_secret2: ${{ secrets.secret2 }}
 
     steps:
       - name: Checkout code
