@@ -104,7 +104,7 @@ resource "null_resource" "toggle_schedule" {
   }
 
   provisioner "local-exec" {
-    command = "Set-AzAutomationSchedule -AutomationAccountName ${var.automation_account_name} -Name ${each.value.name} -ResourceGroupName ${var.resource_group_name} -IsEnabled ${each.value.enabled}"
+    command = "az automation schedule update --automation-account-name ${var.automation_account_name} --resource-group ${var.resource_group_name} --name ${each.value.name} --is-enabled ${each.value.enabled}"
   }
 
   depends_on = [azurerm_automation_schedule.this]
