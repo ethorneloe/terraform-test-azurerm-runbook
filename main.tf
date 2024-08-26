@@ -8,3 +8,5 @@ data "azurerm_automation_account" "existing" {
   name                = "terraform-testing"
   resource_group_name = data.azurerm_resource_group.existing.name
 }
+
+data "azurerm_subscription" "current" {}

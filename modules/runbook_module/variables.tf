@@ -3,6 +3,11 @@ variable "resource_group_name" {
   description = "Resource group name where Automation Account is located"
 }
 
+variable "subscription_id" {
+  type        = string
+  description = "Azure subscription id"
+}
+
 variable "location" {
   type        = string
   description = "Azure location"

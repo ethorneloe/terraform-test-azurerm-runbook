@@ -96,17 +96,16 @@ resource "azurerm_automation_variable_string" "this" {
   encrypted               = each.value.encrypted
 }
 
-resource "azapi_update_resource" "toggle_schedule" {
-  for_each = { for schedule in var.schedules : schedule.name => schedule }
+resource "null_resource" "toggle_schedule" {
+  for_each = { for i in var.schedules : i.name => i }
 
-  type = "Microsoft.Automation/automationAccounts/schedules@2023-11-01"
-  resource_id = "${var.automation_account_resource_id}/schedules/${each.value.name}"
+  triggers = {
+    enabled = each.value.enabled
+  }
 
-  body = jsonencode({
-    "properties" = {
-      "isEnabled" = "false"
-    }
-  })
+  provisioner "local-exec" {
+    command = "az rest --method patch --url \"https://management.azure.com/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Automation/automationAccounts/${var.automation_account_name}/schedules/${each.value.name}?api-version=2023-11-01\" --body \"{'properties':{'isEnabled':${each.value.enabled}}}\""
+  }
 
   depends_on = [azurerm_automation_schedule.this]
 }
