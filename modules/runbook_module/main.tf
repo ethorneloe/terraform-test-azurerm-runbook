@@ -103,8 +103,8 @@ resource "azapi_update_resource" "toggle_schedule" {
   resource_id = "${var.automation_account_resource_id}/schedules/${each.value.name}"
 
   body = jsonencode({
-    properties = {
-      blabla = each.value.enabled
+    "properties" = {
+      "isEnabled" = each.value.enabled
     }
   })
 
