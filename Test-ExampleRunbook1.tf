@@ -11,6 +11,7 @@ module "Runbook1" {
   resource_group_name = data.azurerm_resource_group.existing.name
   automation_account_name = data.azurerm_automation_account.existing.name
   location = var.location
+  timezone = var.automation_schedule_timezone
 
   runbook = {
     name         = "Test-ExampleRunbook1"
@@ -26,7 +27,7 @@ module "Runbook1" {
       name        = "Runbook1-Daily1"
       frequency   = "Day"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00"
       description = "Runbook1-Daily1"
       enabled     = false
       run_on      = ""
@@ -35,7 +36,7 @@ module "Runbook1" {
       name        = "Runbook1-Daily2"
       frequency   = "Day"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00"
       description = "Runbook1-Daily2"
       enabled     = false
       run_on      = ""
@@ -44,7 +45,7 @@ module "Runbook1" {
       name        = "Runbook1-Weekly1"
       frequency   = "Week"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00"
       description = "Runbook1-Weekly1"
       enabled     = true
       run_on      = ""

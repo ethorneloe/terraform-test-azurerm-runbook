@@ -4,6 +4,7 @@ module "Runbook3" {
   resource_group_name = data.azurerm_resource_group.existing.name
   automation_account_name = data.azurerm_automation_account.existing.name
   location = var.location
+  timezone = var.automation_schedule_timezone
 
   runbook = {
     name         = "Test-ExampleRunbook3"
