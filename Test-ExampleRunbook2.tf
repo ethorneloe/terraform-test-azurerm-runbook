@@ -48,7 +48,7 @@ module "Runbook2" {
       interval    = 1
       start_time  = "2024-09-09T01:00:00Z"
       description = "Runbook2-Weekly1"
-      enabled     = true
+      enabled     = false
       run_on      = ""
     },
     {
