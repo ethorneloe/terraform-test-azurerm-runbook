@@ -6,7 +6,7 @@ variable "secret1" {
 }
 
 module "Runbook1" {
-  source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=feature-toggle-schedules-without-az-rest"
+  source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=v2.0.0"
 
   resource_group_name = data.azurerm_resource_group.existing.name
   automation_account_name = data.azurerm_automation_account.existing.name
