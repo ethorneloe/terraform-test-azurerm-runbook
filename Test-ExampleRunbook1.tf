@@ -68,11 +68,12 @@ module "Runbook1" {
       run_on      = ""
     },
     {
-      name        = "Runbook1-Weekly4"
+      name        = "Runbook1-Weekly5"
       frequency   = "Week"
       interval    = 1
-      description = "Runbook1-Weekly4"
+      description = "Runbook1-Weekly5"
       week_days   = ["Tuesday", "Friday"]
+      enabled     = false
       run_on      = ""
     }
   ]
