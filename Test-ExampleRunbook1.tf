@@ -66,6 +66,14 @@ module "Runbook1" {
       description = "Runbook1-Weekly3"
       week_days   = ["Tuesday", "Friday"]
       run_on      = ""
+    },
+    {
+      name        = "Runbook1-Weekly4"
+      frequency   = "Week"
+      interval    = 1
+      description = "Runbook1-Weekly4"
+      week_days   = ["Tuesday", "Friday"]
+      run_on      = ""
     }
   ]
 
