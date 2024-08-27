@@ -38,7 +38,7 @@ module "Runbook1" {
       interval    = 1
       start_time  = "2024-09-09T01:00:00+10:00"
       description = "Runbook1-Daily2"
-      enabled     = false
+      enabled     = true
       run_on      = ""
     },
     {
