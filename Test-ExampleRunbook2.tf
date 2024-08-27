@@ -8,10 +8,8 @@ variable "secret2" {
 module "Runbook2" {
   source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=feature-toggle-schedules-without-az-rest"
 
-  subscription_id = data.azurerm_subscription.current.subscription_id
   resource_group_name = data.azurerm_resource_group.existing.name
   automation_account_name = data.azurerm_automation_account.existing.name
-  automation_account_resource_id = data.azurerm_automation_account.existing.id
   location = var.location
 
   runbook = {

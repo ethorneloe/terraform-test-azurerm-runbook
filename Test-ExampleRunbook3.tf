@@ -1,10 +1,8 @@
 module "Runbook3" {
   source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=feature-toggle-schedules-without-az-rest"
 
-  subscription_id = data.azurerm_subscription.current.subscription_id
   resource_group_name = data.azurerm_resource_group.existing.name
   automation_account_name = data.azurerm_automation_account.existing.name
-  automation_account_resource_id = data.azurerm_automation_account.existing.id
   location = var.location
 
   runbook = {
@@ -23,7 +21,7 @@ module "Runbook3" {
       interval    = 1
       start_time  = "2024-09-09T01:00:00Z"
       description = "Runbook3-Daily1"
-      enabled     = true
+      enabled     = false
       run_on      = ""
     },
     {
@@ -32,7 +30,7 @@ module "Runbook3" {
       interval    = 1
       start_time  = "2024-09-09T01:00:00Z"
       description = "Runbook3-Daily2"
-      enabled     = true
+      enabled     = false
       run_on      = ""
     },
     {
