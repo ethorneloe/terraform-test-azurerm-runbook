@@ -23,7 +23,7 @@ module "Runbook3" {
       interval    = 1
       start_time  = "2024-09-09T01:00:00Z"
       description = "Runbook3-Daily1"
-      enabled     = false
+      enabled     = true
       run_on      = ""
     },
     {
@@ -32,7 +32,7 @@ module "Runbook3" {
       interval    = 1
       start_time  = "2024-09-09T01:00:00Z"
       description = "Runbook3-Daily2"
-      enabled     = false
+      enabled     = true
       run_on      = ""
     },
     {
