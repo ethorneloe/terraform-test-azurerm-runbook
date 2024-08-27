@@ -63,7 +63,6 @@ module "Runbook1" {
       name        = "Runbook1-Weekly3"
       frequency   = "Week"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00+10:00"
       description = "Runbook1-Weekly3"
       week_days   = ["Tuesday", "Friday"]
       run_on      = ""
