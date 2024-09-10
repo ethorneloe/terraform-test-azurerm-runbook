@@ -1,4 +1,5 @@
-# Secrets
+# Demonstrates the declaration of a secret that is sensitive and then using the value for ot later in the automation variable section.
+# The value is picked up through the tfvars environment variable, which could also be set in env in the GitHub workflow.
 variable "secret2" {
   type        = string
   description = "Secret variable from GitHub Secrets"
