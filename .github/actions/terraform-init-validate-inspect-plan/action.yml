@@ -74,6 +74,7 @@ runs:
       uses: aquasecurity/tfsec-action@v1.0.3
       with:
         soft_fail: true
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run Trivy vulnerability scanner in IaC mode
       uses: aquasecurity/trivy-action@0.20.0
@@ -87,7 +88,7 @@ runs:
         severity: "CRITICAL,HIGH"
 
     - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: "trivy-results.sarif"
 
