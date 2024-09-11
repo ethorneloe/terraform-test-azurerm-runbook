@@ -12,6 +12,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  security-events: write
 
 jobs:
   terraform-init-validate-inspect-plan:
