@@ -1,10 +1,3 @@
-# Secrets
-variable "secret1" {
-  type        = string
-  description = "Secret variable from GitHub Secrets"
-  sensitive   = true
-}
-
 module "Runbook1" {
   source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=v2.0.0"
 
