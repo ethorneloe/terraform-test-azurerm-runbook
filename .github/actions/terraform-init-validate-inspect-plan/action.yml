@@ -1,5 +1,5 @@
-name: "Terraform Plan Action"
-description: "Initialize, validate and plan Terraform configurations."
+name: "terraform-init-validate-inspect-plan"
+description: "Initialize, validate, inspect and plan Terraform configurations."
 inputs:
   azure_client_id:
     description: "Azure Client ID"
@@ -54,7 +54,7 @@ runs:
     - name: Terraform Init
       working-directory: ${{ inputs.working_directory }}
       run: |
-        # Terraform Init
+        # terraform init
         set -x
         terraform init -input=false \
           -backend-config="resource_group_name=${{ inputs.resource_group_name }}" \
@@ -66,18 +66,23 @@ runs:
     - name: Terraform Validate
       working-directory: ${{ inputs.working_directory }}
       run: |
-        # Terraform Validate
+        # terraform validate
         terraform validate
       shell: bash
+
+    - name: tfsec
+      uses: aquasecurity/tfsec-action@v1.0.3
+      with:
+        soft_fail: true
 
     - name: Terraform Plan
       working-directory: ${{ inputs.working_directory }}
       run: |
-        # Check if a tfvars file is provided and adjust the plan command accordingly
+        # terraform plan
         if [ -n "${{ inputs.tfvars_file }}" ]; then
           terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}"
         else
-          terraform plan -out="${{ inputs.plan_file_name }}" > plan.txt
+          terraform plan -out="${{ inputs.plan_file_name }}"
         fi
       shell: bash
 
@@ -86,10 +91,3 @@ runs:
       with:
         name: terraform-plan
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
-
-    - name: Upload Terraform Plan
-      uses: actions/upload-artifact@v4
-      with:
-        name: terraform-plan-log
-        path: ${{ inputs.working_directory }}/plan.txt
-

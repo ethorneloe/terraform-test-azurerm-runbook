@@ -30,8 +30,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: terraform-azurerm-init-validate-plan
-        uses: ./.github/actions/terraform-azurerm-init-validate-plan
+      - name: terraform-init-validate-inspect-plan
+        uses: ./.github/actions/terraform-init-validate-inspect-plan
         with:
           azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -46,7 +46,6 @@ jobs:
         env:
           TF_VAR_secret1: ${{ secrets.secret1 }}
           TF_VAR_secret2: ${{ secrets.secret2 }}
-
 
   #apply:
   # name: apply
