@@ -1,4 +1,4 @@
-name: terraform-azurerm-plan
+name: terraform-orchestration
 
 on:
   push:
