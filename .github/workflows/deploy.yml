@@ -33,6 +33,7 @@ jobs:
           storage_account_name: ${{ secrets.TF_BACKEND_AZURE_RM_STORAGE_ACCOUNT_NAME }}
           container_name: ${{ secrets.TF_BACKEND_AZURE_RM_CONTAINER_NAME }}
           backend_key: ${{ secrets.TF_BACKEND_AZURE_RM_KEY }}
+          plan_file_name: "terraform.tfplan"
           working_directory: "./"
           terraform_version: "1.9.5"
 
