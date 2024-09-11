@@ -1,10 +1,3 @@
-# Secrets
-variable "secret1" {
-  type        = string
-  description = "Secret variable from GitHub Secrets"
-  sensitive   = true
-}
-
 module "Runbook1" {
   source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=feature/add-runs-on-and-automation-variables"
 
@@ -72,12 +65,6 @@ module "Runbook1" {
   ]
 
   automation_variables = [
-    {
-      name      = "Runbook1-Secret"
-      value     = var.secret1
-      type      = "string"
-      encrypted = true
-    },
     {
       name      = "Runbook1-Environment"
       value     = "Production"
