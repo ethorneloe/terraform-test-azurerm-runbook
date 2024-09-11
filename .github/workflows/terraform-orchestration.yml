@@ -14,8 +14,8 @@ permissions:
   contents: read
 
 jobs:
-  init-validate-plan:
-    name: init-validate-plan
+  terraform-init-validate-inspect-plan:
+    name: terraform-init-validate-inspect-plan
     runs-on: ubuntu-latest
     environment: "test"
 
@@ -30,7 +30,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: terraform-init-validate-inspect-plan
+      - name: Run terraform-init-validate-inspect-plan custom action
         uses: ./.github/actions/terraform-init-validate-inspect-plan
         with:
           azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
