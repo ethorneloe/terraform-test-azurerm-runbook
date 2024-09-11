@@ -1,0 +1,7 @@
+apply:
+  name: apply
+  runs-on: ubuntu-latest
+  environment:
+    ${{ (github.event.inputs.environment == 'prod' && 'prod-apply') || github.event.inputs.environment }}
+    #if:
+    #run: terraform apply -auto-approve tfplan

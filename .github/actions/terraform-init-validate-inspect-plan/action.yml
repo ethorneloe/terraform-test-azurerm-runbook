@@ -1,0 +1,104 @@
+name: "terraform-init-validate-inspect-plan"
+description: "Initialize, validate, inspect and plan Terraform configurations."
+inputs:
+  azure_client_id:
+    description: "Azure Client ID"
+    required: true
+  subscription_id:
+    description: "Azure Subscription ID"
+    required: true
+  tenant_id:
+    description: "Azure Tenant ID"
+    required: true
+  resource_group_name:
+    description: "Resource Group Name for Terraform backend"
+    required: true
+  storage_account_name:
+    description: "Storage Account Name for Terraform backend"
+    required: true
+  container_name:
+    description: "Container Name for Terraform backend"
+    required: true
+  backend_key:
+    description: "Key for the Terraform state file in the backend"
+    required: true
+  working_directory:
+    description: "Working directory for Terraform configurations"
+    required: true
+  plan_file_name:
+    description: "Name of the Terraform plan file"
+    required: true
+  tfvars_file:
+    description: "Name of the Terraform variables file"
+    required: false
+  terraform_version:
+    description: "Version of Terraform to use"
+    required: true
+    default: "1.9.5"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Environment Variables
+      shell: bash
+      run: |
+        # Setup Environment Variables
+        echo "ARM_CLIENT_ID=${{ inputs.azure_client_id }}" >> $GITHUB_ENV
+        echo "ARM_SUBSCRIPTION_ID=${{ inputs.subscription_id }}" >> $GITHUB_ENV
+        echo "ARM_TENANT_ID=${{ inputs.tenant_id }}" >> $GITHUB_ENV
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraform_version }}
+
+    - name: Terraform Init
+      working-directory: ${{ inputs.working_directory }}
+      run: |
+        # terraform init
+        set -x
+        terraform init -input=false \
+          -backend-config="resource_group_name=${{ inputs.resource_group_name }}" \
+          -backend-config="storage_account_name=${{ inputs.storage_account_name }}" \
+          -backend-config="container_name=${{ inputs.container_name }}" \
+          -backend-config="key=${{ inputs.backend_key }}"
+      shell: bash
+
+    - name: Terraform Validate
+      working-directory: ${{ inputs.working_directory }}
+      run: |
+        # terraform validate
+        terraform validate
+      shell: bash
+
+    - name: Run Trivy vulnerability scanner in IaC mode
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+        scan-type: "config"
+        hide-progress: true
+        format: "sarif"
+        output: "trivy-results.sarif"
+        exit-code: "1"
+        ignore-unfixed: true
+        severity: "CRITICAL,HIGH"
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: "trivy-results.sarif"
+
+    - name: Terraform Plan
+      working-directory: ${{ inputs.working_directory }}
+      run: |
+        # terraform plan
+        if [ -n "${{ inputs.tfvars_file }}" ]; then
+          terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}"
+        else
+          terraform plan -out="${{ inputs.plan_file_name }}"
+        fi
+      shell: bash
+
+    - name: Upload Terraform Plan
+      uses: actions/upload-artifact@v4
+      with:
+        name: terraform-plan
+        path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}

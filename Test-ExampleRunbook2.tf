@@ -7,13 +7,12 @@ variable "secret2" {
 }
 
 module "Runbook2" {
-  source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=feature/add-runs-on-and-automation-variables"
+  source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=v2.0.0"
 
-  subscription_id = data.azurerm_subscription.current.subscription_id
   resource_group_name = data.azurerm_resource_group.existing.name
   automation_account_name = data.azurerm_automation_account.existing.name
-  automation_account_resource_id = data.azurerm_automation_account.existing.id
   location = var.location
+  timezone = var.automation_schedule_timezone
 
   runbook = {
     name         = "Test-ExampleRunbook2"
@@ -29,34 +28,34 @@ module "Runbook2" {
       name        = "Runbook2-Daily"
       frequency   = "Day"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00+10:00"
       description = "Runbook2-Daily1"
-      enabled     = false
+      enabled     = true
       run_on      = ""
     },
     {
       name        = "Runbook2-Daily2"
       frequency   = "Day"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00+10:00"
       description = "Runbook2-Daily2"
-      enabled     = false
+      enabled     = true
       run_on      = ""
     },
     {
       name        = "Runbook2-Weekly1"
       frequency   = "Week"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00+10:00"
       description = "Runbook2-Weekly1"
-      enabled     = true
+      enabled     = false
       run_on      = ""
     },
     {
       name        = "Runbook2-Weekly2"
       frequency   = "Week"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00+10:00"
       description = "Runbook2-Weekly2"
       week_days   = ["Monday", "Friday"]
       run_on      = ""
@@ -65,7 +64,7 @@ module "Runbook2" {
       name        = "Runbook2-Weekly3"
       frequency   = "Week"
       interval    = 1
-      start_time  = "2024-09-09T01:00:00Z"
+      start_time  = "2024-09-09T01:00:00+10:00"
       description = "Runbook2-Weekly3"
       week_days   = ["Tuesday", "Friday"]
       run_on      = ""
