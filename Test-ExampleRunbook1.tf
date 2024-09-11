@@ -64,12 +64,6 @@ module "Runbook1" {
 
   automation_variables = [
     {
-      name      = "Runbook1-Secret"
-      value     = var.secret1
-      type      = "string"
-      encrypted = true
-    },
-    {
       name      = "Runbook1-Environment"
       value     = "Production"
       type      = "string"
