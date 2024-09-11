@@ -70,12 +70,6 @@ runs:
         terraform validate
       shell: bash
 
-    - name: tfsec
-      uses: aquasecurity/tfsec-action@v1.0.3
-      with:
-        soft_fail: true
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Run Trivy vulnerability scanner in IaC mode
       uses: aquasecurity/trivy-action@0.20.0
       with:
