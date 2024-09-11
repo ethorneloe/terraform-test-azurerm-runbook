@@ -73,17 +73,19 @@ runs:
     - name: Terraform Plan
       working-directory: ${{ inputs.working_directory }}
       run: |
-        # Terraform Plan
+        # Check if a tfvars file is provided and adjust the plan command accordingly
         if [ -n "${{ inputs.tfvars_file }}" ]; then
-          terraform plan -out=${{ inputs.plan_file_name }} -var-file=${{ inputs.tfvars_file }}
+          terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}"
         else
-          terraform plan -out=${{ inputs.plan_file_name }} > dev/null
-          terraform show -json ${{ inputs.plan_file_name }} > "${{ inputs.plan_file_name }}.json"
-
+          terraform plan -out="${{ inputs.plan_file_name }}"
+        fi
+        # Always generate a JSON version of the plan, assuming the plan file name is set correctly
+        terraform show -json "${{ inputs.plan_file_name }}" > "${{ inputs.plan_file_name }}.json"
       shell: bash
 
-    - name: Upload Terraform Plan
+    - name: Upload Terraform Plan JSON
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan
+        name: terraform-plan-json
         path: "${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.json"
+
