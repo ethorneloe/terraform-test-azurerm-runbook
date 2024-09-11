@@ -41,11 +41,10 @@ runs:
     - name: Setup Environment Variables
       shell: bash
       run: |
+        # Setup Environment Variables
         echo "ARM_CLIENT_ID=${{ inputs.azure_client_id }}" >> $GITHUB_ENV
         echo "ARM_SUBSCRIPTION_ID=${{ inputs.subscription_id }}" >> $GITHUB_ENV
         echo "ARM_TENANT_ID=${{ inputs.tenant_id }}" >> $GITHUB_ENV
-        echo "ARM_USE_OIDC=true" >> $GITHUB_ENV
-        echo "ARM_USE_AZUREAD=true" >> $GITHUB_ENV
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -55,6 +54,7 @@ runs:
     - name: Terraform Init
       working-directory: ${{ inputs.working_directory }}
       run: |
+        # Terraform Init
         terraform init -input=false \
           -backend-config="resource_group_name=${{ inputs.resource_group_name }}" \
           -backend-config="storage_account_name=${{ inputs.storage_account_name }}" \
@@ -64,12 +64,15 @@ runs:
 
     - name: Terraform Validate
       working-directory: ${{ inputs.working_directory }}
-      run: terraform validate -input=false
+      run: |
+        # Terraform Validate
+        terraform validate
       shell: bash
 
     - name: Terraform Plan
       working-directory: ${{ inputs.working_directory }}
       run: |
+        # Terraform Plan
         if [ -n "${{ inputs.tfvars_file }}" ]; then
           terraform plan -out=${{ inputs.plan_file_name }} -var-file=${{ inputs.tfvars_file }}
         else
