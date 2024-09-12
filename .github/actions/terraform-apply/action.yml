@@ -38,6 +38,9 @@ inputs:
   sops_config_file:
     description: "Name of the SOPS configuration file"
     required: false
+  artifact_base_name:
+    description: "Base name for the plan artifacts"
+    required: true
 
 runs:
   using: "composite"
@@ -67,12 +70,29 @@ runs:
           -backend-config="key=${{ inputs.backend_key }}"
       shell: bash
 
-    - name: Download Terraform plan
+    - name: Download Terraform plan (Encrypted)
+      if: ${{ inputs.sops_config_file }}
       uses: actions/download-artifact@v4
       with:
-        name: terraform-plan
+        name: ${{ inputs.artifact_base_name }}-enc
         path: ${{ inputs.working_directory }}
 
+    - name: Download Terraform plan (Unencrypted)
+      if: ${{ inputs.sops_config_file == ''}}
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.artifact_base_name }}
+        path: ${{ inputs.working_directory }}
+
+    # Conditional decryption of the encrypted Terraform plan file
+    - name: Decrypt Terraform Plan File
+      if: ${{ inputs.sops_config_file }}
+      run: |
+        sops --config ${{ inputs.sops_config_file }} --decrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
+        sops --config ${{ inputs.sops_config_file }} --decrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt
+      shell: bash
+
+    # Apply the Terraform plan, using the decrypted or directly downloaded file
     - name: Apply Terraform Plan
       run: terraform apply -input=false -auto-approve ${{ inputs.plan_file_name }}
       working-directory: ${{ inputs.working_directory }}

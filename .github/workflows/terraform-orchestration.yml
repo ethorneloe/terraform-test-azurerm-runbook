@@ -72,17 +72,18 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      #- name: Run terraform-apply custom action
-      #  uses: ./.github/actions/terraform-apply
-      #  with:
-      #    client_id: ${{ secrets.AZURE_CLIENT_ID }}
-      #    subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #    tenant_id: ${{ secrets.AZURE_TENANT_ID }}
-      #    resource_group_name: ${{ secrets.TF_BACKEND_AZURE_RM_RESOURCE_GROUP_NAME }}
-      #    storage_account_name: ${{ secrets.TF_BACKEND_AZURE_RM_STORAGE_ACCOUNT_NAME }}
-      #    container_name: ${{ secrets.TF_BACKEND_AZURE_RM_CONTAINER_NAME }}
-      #    backend_key: ${{ secrets.TF_BACKEND_AZURE_RM_KEY }}
-      #    plan_file_name: ${{ inputs.terraform_plan_file_name }}
-      #    working_directory: ${{ inputs.working_directory }}
-      #    terraform_version: ${{ inputs.terraform_version }}
-      #    sops_config_file: ${{ inputs.sops_config_file }}
+      - name: Run terraform-apply custom action
+        uses: ./.github/actions/terraform-apply
+        with:
+          client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          resource_group_name: ${{ secrets.TF_BACKEND_AZURE_RM_RESOURCE_GROUP_NAME }}
+          storage_account_name: ${{ secrets.TF_BACKEND_AZURE_RM_STORAGE_ACCOUNT_NAME }}
+          container_name: ${{ secrets.TF_BACKEND_AZURE_RM_CONTAINER_NAME }}
+          backend_key: ${{ secrets.TF_BACKEND_AZURE_RM_KEY }}
+          plan_file_name: ${{ inputs.terraform_plan_file_name }}
+          working_directory: ${{ inputs.working_directory }}
+          terraform_version: ${{ inputs.terraform_version }}
+          sops_config_file: ${{ inputs.sops_config_file }}
+          artifact_base_name: ${{ inputs.artifact_base_name }}

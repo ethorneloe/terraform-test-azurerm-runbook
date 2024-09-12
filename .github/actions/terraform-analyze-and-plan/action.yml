@@ -112,8 +112,8 @@ runs:
       if: ${{ inputs.sops_config_file }}
       run: |
         if [ -f "${{ inputs.working_directory }}/${{ inputs.sops_config_file }}" ]; then
-          sops --config ${{ inputs.working_directory }}/${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }} > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
-          sops --config ${{ inputs.working_directory }}/${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
+          sops --config ${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }} > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
+          sops --config ${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
         fi
       shell: bash
 
