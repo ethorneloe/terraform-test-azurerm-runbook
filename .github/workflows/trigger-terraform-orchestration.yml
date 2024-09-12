@@ -1,4 +1,4 @@
-name: Trigger Terraform Orchestration
+name: trigger-terraform-orchestration
 
 on:
   push:
@@ -15,7 +15,7 @@ permissions:
   security-events: write
 
 jobs:
-  trigger-terraform-orchestration-test:
+  tf-orch-test:
     if: ( github.ref != 'refs/heads/main' )
     uses: ./.github/workflows/terraform-orchestration.yml # Adjust the ref as needed (e.g., to a specific tag or branch)
     secrets: inherit
@@ -27,7 +27,7 @@ jobs:
       sops_config_file: ${{ vars.SOPS_CONFIG_FILE }}
       artifact_base_name: ${{ vars.ARTIFACT_BASE_NAME }}
 
-  trigger-terraform-orchestration-prod:
+  tf-orch-prod:
     if: ( github.ref == 'refs/heads/main' )
     uses: ./.github/workflows/terraform-orchestration.yml # Adjust the ref as needed (e.g., to a specific tag or branch)
     secrets: inherit

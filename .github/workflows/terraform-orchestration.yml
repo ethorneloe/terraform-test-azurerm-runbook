@@ -23,8 +23,8 @@ on:
         type: string
 
 jobs:
-  terraform-init-validate-inspect-plan:
-    name: terraform-init-validate-inspect-plan
+  init-validate-inspect-plan:
+    name: init-validate-inspect-plan
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
@@ -55,9 +55,9 @@ jobs:
           sops_config_file: ${{ inputs.sops_config_file }}
           artifact_base_name: ${{ inputs.artifact_base_name }}
 
-  terraform-apply:
-    needs: terraform-init-validate-inspect-plan
-    name: terraform-apply
+  apply:
+    needs: init-validate-inspect-plan
+    name: apply
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
