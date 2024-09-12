@@ -48,7 +48,7 @@ runs:
     - name: Setup Environment Variables
       run: |
         # Setup Environment Variables
-        echo "ARM_CLIENT_ID=${{ inputs.azure_client_id }}" >> $GITHUB_ENV
+        echo "ARM_CLIENT_ID=${{ inputs.client_id }}" >> $GITHUB_ENV
         echo "ARM_SUBSCRIPTION_ID=${{ inputs.subscription_id }}" >> $GITHUB_ENV
         echo "ARM_TENANT_ID=${{ inputs.tenant_id }}" >> $GITHUB_ENV
       shell: bash
