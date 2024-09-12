@@ -1,7 +1,7 @@
 name: "terraform-apply"
 description: "Apply approved plan using artifact from the previous workflow job"
 inputs:
-  azure_client_id:
+  client_id:
     description: "Azure Client ID"
     required: true
   subscription_id:
