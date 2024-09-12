@@ -115,14 +115,14 @@ runs:
       shell: bash
 
     - name: Upload Plan Files
-      if: ${{ inputs.sops_config_file != ''}}
+      if: ${{ inputs.sops_config_file == ''}}
       uses: actions/upload-artifact@v4
       with:
         name: terraform-plan
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
 
     - name: Upload Plan Text Files
-      if: ${{ inputs.sops_config_file != ''}}
+      if: ${{ inputs.sops_config_file == ''}}
       uses: actions/upload-artifact@v4
       with:
         name: terraform-plan-txt
@@ -132,12 +132,12 @@ runs:
       if: ${{ inputs.sops_config_file }}
       uses: actions/upload-artifact@v4
       with:
-        name: encrypted-terraform-plan
+        name: terraform-plan-enc
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
 
     - name: Upload Encrypted Plan Text Files
       if: ${{ inputs.sops_config_file }}
       uses: actions/upload-artifact@v4
       with:
-        name: encrypted-terraform-plan-txt
+        name: terraform-plan-txt-enc
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
