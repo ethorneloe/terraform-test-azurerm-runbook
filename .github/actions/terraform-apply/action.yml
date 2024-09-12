@@ -70,6 +70,11 @@ runs:
           -backend-config="key=${{ inputs.backend_key }}"
       shell: bash
 
+    - name: Install SOPS
+      if: ${{ inputs.sops_config_file }}
+      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+      id: install
+
     - name: Download Terraform plan (Encrypted)
       if: ${{ inputs.sops_config_file }}
       uses: actions/download-artifact@v4
