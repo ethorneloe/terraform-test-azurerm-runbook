@@ -74,7 +74,7 @@ runs:
       uses: aquasecurity/trivy-action@0.20.0
       with:
         scan-type: "config"
-        hide-progress: false
+        hide-progress: true
         format: "sarif"
         output: "trivy-results.sarif"
         exit-code: "1"
@@ -91,14 +91,20 @@ runs:
       run: |
         # terraform plan
         if [ -n "${{ inputs.tfvars_file }}" ]; then
-          terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}"
+          terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         else
-          terraform plan -out="${{ inputs.plan_file_name }}"
+          terraform plan -out="${{ inputs.plan_file_name }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         fi
       shell: bash
 
-    - name: Upload Terraform Plan
+    - name: Upload Terraform Plan Binary
       uses: actions/upload-artifact@v4
       with:
         name: terraform-plan
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
+
+    - name: Upload Terraform Plan Text
+      uses: actions/upload-artifact@v4
+      with:
+        name: terraform-plan
+        path: "${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt"
