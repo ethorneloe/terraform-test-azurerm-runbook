@@ -100,11 +100,11 @@ runs:
     - name: Upload Terraform Plan Binary
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan
+        name: terraform-plan-binary
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
 
     - name: Upload Terraform Plan Text
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan
-        path: ${{ inputs.working_directory }}/"${{ inputs.plan_file_name }}.txt"
+        name: terraform-plan-text
+        path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt
