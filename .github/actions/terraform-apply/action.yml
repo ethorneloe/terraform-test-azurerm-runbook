@@ -1,7 +1,78 @@
-apply:
-  name: apply
-  runs-on: ubuntu-latest
-  environment:
-    ${{ (github.event.inputs.environment == 'prod' && 'prod-apply') || github.event.inputs.environment }}
-    #if:
-    #run: terraform apply -auto-approve tfplan
+name: "terraform-apply"
+description: "Apply approved plan using artifact from the previous workflow job"
+inputs:
+  azure_client_id:
+    description: "Azure Client ID"
+    required: true
+  subscription_id:
+    description: "Azure Subscription ID"
+    required: true
+  tenant_id:
+    description: "Azure Tenant ID"
+    required: true
+  resource_group_name:
+    description: "Resource Group Name for Terraform backend"
+    required: true
+  storage_account_name:
+    description: "Storage Account Name for Terraform backend"
+    required: true
+  container_name:
+    description: "Container Name for Terraform backend"
+    required: true
+  backend_key:
+    description: "Key for the Terraform state file in the backend"
+    required: true
+  working_directory:
+    description: "Working directory for Terraform configurations"
+    required: true
+  plan_file_name:
+    description: "Name of the Terraform plan file"
+    required: true
+  tfvars_file:
+    description: "Name of the Terraform variables file"
+    required: false
+  terraform_version:
+    description: "Version of Terraform to use"
+    required: true
+    default: "1.9.5"
+  sops_config_file:
+    description: "Name of the SOPS configuration file"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Environment Variables
+      run: |
+        # Setup Environment Variables
+        echo "ARM_CLIENT_ID=${{ inputs.azure_client_id }}" >> $GITHUB_ENV
+        echo "ARM_SUBSCRIPTION_ID=${{ inputs.subscription_id }}" >> $GITHUB_ENV
+        echo "ARM_TENANT_ID=${{ inputs.tenant_id }}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraform_version }}
+
+    - name: Terraform Init
+      working-directory: ${{ inputs.working_directory }}
+      run: |
+        # terraform init
+        set -x
+        terraform init -input=false \
+          -backend-config="resource_group_name=${{ inputs.resource_group_name }}" \
+          -backend-config="storage_account_name=${{ inputs.storage_account_name }}" \
+          -backend-config="container_name=${{ inputs.container_name }}" \
+          -backend-config="key=${{ inputs.backend_key }}"
+      shell: bash
+
+    - name: Download Terraform plan
+      uses: actions/download-artifact@v4
+      with:
+        name: terraform-plan
+        path: ${{ inputs.working_directory }}
+
+    - name: Apply Terraform Plan
+      run: terraform apply -input=false -auto-approve ${{ inputs.plan_file_name }}
+      working-directory: ${{ inputs.working_directory }}

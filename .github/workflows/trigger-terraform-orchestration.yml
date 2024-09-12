@@ -25,6 +25,7 @@ jobs:
       working_directory: ${{ vars.WORKING_DIRECTORY }}
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       sops_config_file: ${{ vars.SOPS_CONFIG_FILE }}
+      artifact_base_name: ${{ vars.ARTIFACT_BASE_NAME }}
 
   trigger-terraform-orchestration-prod:
     if: ( github.ref == 'refs/heads/main' )
@@ -36,3 +37,4 @@ jobs:
       working_directory: ${{ vars.WORKING_DIRECTORY }}
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       sops_config_file: ${{ vars.SOPS_CONFIG_FILE }}
+      artifact_base_name: ${{ vars.ARTIFACT_BASE_NAME }}

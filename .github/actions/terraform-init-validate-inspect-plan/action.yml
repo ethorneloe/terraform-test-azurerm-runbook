@@ -38,6 +38,9 @@ inputs:
   sops_config_file:
     description: "Name of the SOPS configuration file"
     required: false
+  artifact_base_name:
+    description: "Base name for the plan artifacts"
+    required: true
 
 runs:
   using: "composite"
@@ -118,26 +121,26 @@ runs:
       if: ${{ inputs.sops_config_file == ''}}
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan
+        name: ${{ inputs.artifact_base_name}}
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
 
     - name: Upload Plan Text Files
       if: ${{ inputs.sops_config_file == ''}}
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan-txt
+        name: ${{ inputs.artifact_base_name}}-txt
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt
 
     - name: Upload Encrypted Plan Files
       if: ${{ inputs.sops_config_file }}
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan-enc
+        name: ${{ inputs.artifact_base_name}}-enc
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
 
     - name: Upload Encrypted Plan Text Files
       if: ${{ inputs.sops_config_file }}
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan-txt-enc
+        name: ${{ inputs.artifact_base_name}}-txt-enc
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
