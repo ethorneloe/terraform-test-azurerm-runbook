@@ -107,4 +107,4 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: terraform-plan
-        path: "${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt"
+        path: ${{ inputs.working_directory }}/"${{ inputs.plan_file_name }}.txt"
