@@ -1,24 +1,32 @@
 name: terraform-orchestration
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: read
-  security-events: write
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      terraform_plan_file_name:
+        required: true
+        type: string
+      working_directory:
+        required: true
+        type: string
+      terraform_version:
+        required: true
+        type: string
+      sops_config_file:
+        required: false
+        type: string
+      artifact_base_name:
+        required: true
+        type: string
 
 jobs:
-  terraform-init-validate-inspect-plan:
-    name: terraform-init-validate-inspect-plan
+  analyze-and-plan:
+    name: analyze-and-plan
     runs-on: ubuntu-latest
-    environment: "test"
+    environment: ${{ inputs.environment }}
 
     steps:
       - name: Checkout code
@@ -27,30 +35,55 @@ jobs:
       - name: Authenticate to azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID}}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Run terraform-init-validate-inspect-plan custom action
-        uses: ./.github/actions/terraform-init-validate-inspect-plan
+      - name: Run terraform-analyze-and-plan custom action
+        uses: ./.github/actions/terraform-analyze-and-plan
         with:
-          azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          client_id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant_id: ${{ secrets.AZURE_TENANT_ID }}
           resource_group_name: ${{ secrets.TF_BACKEND_AZURE_RM_RESOURCE_GROUP_NAME }}
           storage_account_name: ${{ secrets.TF_BACKEND_AZURE_RM_STORAGE_ACCOUNT_NAME }}
           container_name: ${{ secrets.TF_BACKEND_AZURE_RM_CONTAINER_NAME }}
           backend_key: ${{ secrets.TF_BACKEND_AZURE_RM_KEY }}
-          plan_file_name: "terraform.tfplan"
-          working_directory: "./"
-          terraform_version: "1.9.5"
-        env:
-          TF_VAR_secret1: ${{ secrets.secret1 }}
-          TF_VAR_secret2: ${{ secrets.secret2 }}
+          plan_file_name: ${{ inputs.terraform_plan_file_name }}
+          working_directory: ${{ inputs.working_directory }}
+          terraform_version: ${{ inputs.terraform_version }}
+          sops_config_file: ${{ inputs.sops_config_file }}
+          artifact_base_name: ${{ inputs.artifact_base_name }}
 
-  #apply:
-  # name: apply
-  # runs-on: ubuntu-latest
-  # environment: ${{ (github.event.inputs.environment == 'prod' && 'prod-apply') || github.event.inputs.environment }}
-  #if:
-  #run: terraform apply -auto-approve tfplan
+  apply:
+    needs: analyze-and-plan
+    name: apply
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Run terraform-apply custom action
+        uses: ./.github/actions/terraform-apply
+        with:
+          client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+          resource_group_name: ${{ secrets.TF_BACKEND_AZURE_RM_RESOURCE_GROUP_NAME }}
+          storage_account_name: ${{ secrets.TF_BACKEND_AZURE_RM_STORAGE_ACCOUNT_NAME }}
+          container_name: ${{ secrets.TF_BACKEND_AZURE_RM_CONTAINER_NAME }}
+          backend_key: ${{ secrets.TF_BACKEND_AZURE_RM_KEY }}
+          plan_file_name: ${{ inputs.terraform_plan_file_name }}
+          working_directory: ${{ inputs.working_directory }}
+          terraform_version: ${{ inputs.terraform_version }}
+          sops_config_file: ${{ inputs.sops_config_file }}
+          artifact_base_name: ${{ inputs.artifact_base_name }}

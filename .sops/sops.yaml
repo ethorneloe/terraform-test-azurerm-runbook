@@ -1,0 +1,3 @@
+creation_rules:
+  - azure_keyvault: "https://kv-sops-ethor.vault.azure.net/keys/sops-lab-1/67eeee85b16348729cdf59ca2f1d829e"
+  - age: "age1e9pz5shwykhu90xgck42sdem2d4kz26hs3ltupgdle9gas99cvgspjmc7k"

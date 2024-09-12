@@ -1,7 +1,7 @@
-name: "terraform-init-validate-inspect-plan"
+name: "terraform-analyze-and-plan"
 description: "Initialize, validate, inspect and plan Terraform configurations."
 inputs:
-  azure_client_id:
+  client_id:
     description: "Azure Client ID"
     required: true
   subscription_id:
@@ -35,16 +35,23 @@ inputs:
     description: "Version of Terraform to use"
     required: true
     default: "1.9.5"
+  sops_config_file:
+    description: "Name of the SOPS configuration file"
+    required: false
+  artifact_base_name:
+    description: "Base name for the plan artifacts"
+    required: true
+
 runs:
   using: "composite"
   steps:
     - name: Setup Environment Variables
-      shell: bash
       run: |
         # Setup Environment Variables
-        echo "ARM_CLIENT_ID=${{ inputs.azure_client_id }}" >> $GITHUB_ENV
+        echo "ARM_CLIENT_ID=${{ inputs.client_id }}" >> $GITHUB_ENV
         echo "ARM_SUBSCRIPTION_ID=${{ inputs.subscription_id }}" >> $GITHUB_ENV
         echo "ARM_TENANT_ID=${{ inputs.tenant_id }}" >> $GITHUB_ENV
+      shell: bash
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -89,16 +96,49 @@ runs:
     - name: Terraform Plan
       working-directory: ${{ inputs.working_directory }}
       run: |
-        # terraform plan
         if [ -n "${{ inputs.tfvars_file }}" ]; then
-          terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}"
+          terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         else
-          terraform plan -out="${{ inputs.plan_file_name }}"
+          terraform plan -out="${{ inputs.plan_file_name }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         fi
       shell: bash
 
-    - name: Upload Terraform Plan
+    - name: Install SOPS
+      if: ${{ inputs.sops_config_file }}
+      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+      id: install
+
+    - name: Encrypt Files Conditionally
+      if: ${{ inputs.sops_config_file }}
+      run: |
+        sops --config ${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }} > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
+        sops --config ${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
+      shell: bash
+
+    - name: Upload Plan Files
+      if: ${{ inputs.sops_config_file == ''}}
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan
+        name: ${{ inputs.artifact_base_name}}
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
+
+    - name: Upload Plan Text Files
+      if: ${{ inputs.sops_config_file == ''}}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact_base_name}}-txt
+        path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt
+
+    - name: Upload Encrypted Plan Files
+      if: ${{ inputs.sops_config_file }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact_base_name}}-enc
+        path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
+
+    - name: Upload Encrypted Plan Text Files
+      if: ${{ inputs.sops_config_file }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact_base_name}}-txt-enc
+        path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc

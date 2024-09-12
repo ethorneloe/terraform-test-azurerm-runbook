@@ -1,0 +1,40 @@
+name: trigger-terraform-orchestration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+jobs:
+  tf-test:
+    if: ( github.ref != 'refs/heads/main' )
+    uses: ./.github/workflows/terraform-orchestration.yml # Adjust the ref as needed (e.g., to a specific tag or branch)
+    secrets: inherit
+    with:
+      environment: "test"
+      terraform_plan_file_name: ${{ vars.TERRAFORM_PLAN_FILE_NAME }}
+      working_directory: ${{ vars.WORKING_DIRECTORY }}
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      sops_config_file: ${{ vars.SOPS_CONFIG_FILE }}
+      artifact_base_name: ${{ vars.ARTIFACT_BASE_NAME }}
+
+  tf-prod:
+    if: ( github.ref == 'refs/heads/main' )
+    uses: ./.github/workflows/terraform-orchestration.yml # Adjust the ref as needed (e.g., to a specific tag or branch)
+    secrets: inherit
+    with:
+      environment: "prod"
+      terraform_plan_file_name: ${{ vars.TERRAFORM_PLAN_FILE_NAME }}
+      working_directory: ${{ vars.WORKING_DIRECTORY }}
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      sops_config_file: ${{ vars.SOPS_CONFIG_FILE }}
+      artifact_base_name: ${{ vars.ARTIFACT_BASE_NAME }}
