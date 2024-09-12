@@ -43,12 +43,12 @@ runs:
   using: "composite"
   steps:
     - name: Setup Environment Variables
-      shell: bash
       run: |
         # Setup Environment Variables
         echo "ARM_CLIENT_ID=${{ inputs.azure_client_id }}" >> $GITHUB_ENV
         echo "ARM_SUBSCRIPTION_ID=${{ inputs.subscription_id }}" >> $GITHUB_ENV
         echo "ARM_TENANT_ID=${{ inputs.tenant_id }}" >> $GITHUB_ENV
+      shell: bash
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -112,6 +112,7 @@ runs:
           sops --config ${{ inputs.working_directory }}/${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }} > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
           sops --config ${{ inputs.working_directory }}/${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
         fi
+      shell: bash
 
     - name: Upload Plan Files
       if: ${{ inputs.sops_config_file != ''}}
