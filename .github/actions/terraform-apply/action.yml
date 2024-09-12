@@ -94,7 +94,6 @@ runs:
       if: ${{ inputs.sops_config_file }}
       run: |
         sops --config ${{ inputs.sops_config_file }} --decrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
-        sops --config ${{ inputs.sops_config_file }} --decrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt
       shell: bash
 
     # Apply the Terraform plan, using the decrypted or directly downloaded file
