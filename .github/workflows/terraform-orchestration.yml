@@ -44,6 +44,7 @@ jobs:
           plan_file_name: "terraform.tfplan"
           working_directory: "./"
           terraform_version: "1.9.5"
+          sops_config_file: "./.sops/sops.yaml"
         env:
           TF_VAR_secret1: ${{ secrets.secret1 }}
           TF_VAR_secret2: ${{ secrets.secret2 }}
