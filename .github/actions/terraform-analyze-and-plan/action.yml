@@ -1,4 +1,4 @@
-name: "terraform-init-validate-inspect-plan"
+name: "terraform-analyze-and-plan"
 description: "Initialize, validate, inspect and plan Terraform configurations."
 inputs:
   client_id:

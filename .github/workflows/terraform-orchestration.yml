@@ -23,8 +23,8 @@ on:
         type: string
 
 jobs:
-  init-validate-inspect-plan:
-    name: init-validate-inspect-plan
+  analyze-and-plan:
+    name: analyze-and-plan
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
@@ -39,8 +39,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Run terraform-init-validate-inspect-plan custom action
-        uses: ./.github/actions/terraform-init-validate-inspect-plan
+      - name: Run terraform-analyze-and-plan custom action
+        uses: ./.github/actions/terraform-analyze-and-plan
         with:
           client_id: ${{ secrets.AZURE_CLIENT_ID }}
           subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -56,7 +56,7 @@ jobs:
           artifact_base_name: ${{ inputs.artifact_base_name }}
 
   apply:
-    needs: init-validate-inspect-plan
+    needs: analyze-and-plan
     name: apply
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
