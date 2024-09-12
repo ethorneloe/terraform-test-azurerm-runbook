@@ -1,10 +1,10 @@
 # Demonstrates the declaration of a secret that is sensitive and then using the value for ot later in the automation variable section.
 # The value is picked up through the tfvars environment variable, which could also be set in env in the GitHub workflow.
-variable "secret2" {
-  type        = string
-  description = "Secret variable from GitHub Secrets"
-  sensitive   = true
-}
+# variable "secret2" {
+#   type        = string
+#   description = "Secret variable from GitHub Secrets"
+#   sensitive   = true
+# }
 
 module "Runbook2" {
   source = "git::https://github.com/ethorneloe/terraform-azurerm-automation-runbook.git?ref=v2.0.0"
@@ -72,12 +72,12 @@ module "Runbook2" {
   ]
 
   automation_variables = [
-    {
-      name      = "Runbook2-Secret"
-      value     = var.secret2
-      type      = "string"
-      encrypted = true
-    },
+    #
+    # name      = "Runbook2-Secret"
+    # value     = var.secret2
+    # type      = "string"
+    # encrypted = true
+    #,
     {
       name      = "Runbook2-Environment"
       value     = "Production"

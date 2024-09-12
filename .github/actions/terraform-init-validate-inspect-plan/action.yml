@@ -1,7 +1,7 @@
 name: "terraform-init-validate-inspect-plan"
 description: "Initialize, validate, inspect and plan Terraform configurations."
 inputs:
-  azure_client_id:
+  client_id:
     description: "Azure Client ID"
     required: true
   subscription_id:
@@ -45,7 +45,7 @@ runs:
     - name: Setup Environment Variables
       run: |
         # Setup Environment Variables
-        echo "ARM_CLIENT_ID=${{ inputs.azure_client_id }}" >> $GITHUB_ENV
+        echo "ARM_CLIENT_ID=${{ inputs.client_id }}" >> $GITHUB_ENV
         echo "ARM_SUBSCRIPTION_ID=${{ inputs.subscription_id }}" >> $GITHUB_ENV
         echo "ARM_TENANT_ID=${{ inputs.tenant_id }}" >> $GITHUB_ENV
       shell: bash
