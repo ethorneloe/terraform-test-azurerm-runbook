@@ -35,6 +35,10 @@ inputs:
     description: "Version of Terraform to use"
     required: true
     default: "1.9.5"
+  sops_config_file:
+    description: "Name of the SOPS configuration file"
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -89,7 +93,6 @@ runs:
     - name: Terraform Plan
       working-directory: ${{ inputs.working_directory }}
       run: |
-        # terraform plan
         if [ -n "${{ inputs.tfvars_file }}" ]; then
           terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         else
@@ -97,14 +100,43 @@ runs:
         fi
       shell: bash
 
-    - name: Upload Terraform Plan Binary
+    - name: Install SOPS
+      if: ${{ inputs.sops_config_file }}
+      uses: mdgreenwald/mozilla-sops-action@v1.6.0
+      id: install
+
+    - name: Encrypt Files Conditionally
+      if: ${{ inputs.sops_config_file }}
+      run: |
+        if [ -f "${{ inputs.working_directory }}/${{ inputs.sops_config_file }}" ]; then
+          sops --config ${{ inputs.working_directory }}/${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }} > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
+          sops --config ${{ inputs.working_directory }}/${{ inputs.sops_config_file }} --encrypt ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt > ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
+        fi
+
+    - name: Upload Plan Files
+      if: ${{ inputs.sops_config_file != ''}}
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan-binary
+        name: terraform-plan
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}
 
-    - name: Upload Terraform Plan Text
+    - name: Upload Plan Text Files
+      if: ${{ inputs.sops_config_file != ''}}
       uses: actions/upload-artifact@v4
       with:
-        name: terraform-plan-text
+        name: terraform-plan-txt
         path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt
+
+    - name: Upload Encrypted Plan Files
+      if: ${{ inputs.sops_config_file }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: encrypted-terraform-plan
+        path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.enc
+
+    - name: Upload Encrypted Plan Text Files
+      if: ${{ inputs.sops_config_file }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: encrypted-terraform-plan-txt
+        path: ${{ inputs.working_directory }}/${{ inputs.plan_file_name }}.txt.enc
