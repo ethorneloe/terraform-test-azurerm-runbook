@@ -94,5 +94,7 @@ runs:
 
     # Apply the Terraform plan, using the decrypted or directly downloaded file
     - name: Apply Terraform Plan
-      run: terraform apply -input=false -auto-approve ${{ inputs.plan_file_name }}
+      run: |
+        terraform apply -input=false -auto-approve ${{ inputs.plan_file_name }}
+      shell: bash
       working-directory: ${{ inputs.working_directory }}
