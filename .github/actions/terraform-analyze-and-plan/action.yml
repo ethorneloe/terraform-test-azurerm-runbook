@@ -97,9 +97,9 @@ runs:
       working-directory: ${{ inputs.working_directory }}
       run: |
         if [ -n "${{ inputs.tfvars_file }}" ]; then
-          terraform plan -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
+          terraform plan -input=false -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         else
-          terraform plan -out="${{ inputs.plan_file_name }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
+          terraform plan -input=false -out="${{ inputs.plan_file_name }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         fi
       shell: bash
 
