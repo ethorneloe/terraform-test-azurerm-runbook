@@ -96,7 +96,6 @@ runs:
     - name: Terraform Plan
       working-directory: ${{ inputs.working_directory }}
       run: |
-        echo "Using tfvars file: ${{ inputs.tfvars_file }}"
         if [ -n "${{ inputs.tfvars_file }}" ]; then
           terraform plan -input=false -out="${{ inputs.plan_file_name }}" -var-file="${{ inputs.tfvars_file }}" -no-color >  "${{ inputs.plan_file_name }}.txt"
         else
