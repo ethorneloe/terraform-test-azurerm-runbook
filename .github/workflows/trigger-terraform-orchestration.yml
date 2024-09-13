@@ -25,7 +25,10 @@ jobs:
       working_directory: ${{ vars.WORKING_DIRECTORY }}
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       sops_config_file: ${{ vars.SOPS_CONFIG_FILE }}
+<<<<<<< HEAD
       var_file: ${{ vars.TFVARS_FILE }}
+=======
+>>>>>>> main
       artifact_base_name: ${{ vars.ARTIFACT_BASE_NAME }}
 
   tf-prod:
@@ -38,5 +41,8 @@ jobs:
       working_directory: ${{ vars.WORKING_DIRECTORY }}
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       sops_config_file: ${{ vars.SOPS_CONFIG_FILE }}
+<<<<<<< HEAD
       var_file: ${{ vars.TFVARS_FILE }}
+=======
+>>>>>>> main
       artifact_base_name: ${{ vars.ARTIFACT_BASE_NAME }}
