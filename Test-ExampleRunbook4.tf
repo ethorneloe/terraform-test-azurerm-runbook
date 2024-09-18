@@ -15,15 +15,6 @@ module "Runbook4" {
     runbook_type = "PowerShell72"
   }
 
-  automation_variables = [
-    {
-      name      = "Runbook4-Environment"
-      value     = "Production"
-      type      = "string"
-      encrypted = false
-    }
-  ]
-
   tags = {
     "Environment" = "Production"
     "ManagedBy"   = "Terraform"
