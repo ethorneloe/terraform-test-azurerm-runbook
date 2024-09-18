@@ -17,24 +17,6 @@ module "Runbook4" {
 
   schedules = [
     {
-      name        = "Runbook4-Daily1"
-      frequency   = "Day"
-      interval    = 1
-      start_time  = "2024-09-19T01:00:00+10:00"
-      description = "Runbook4-Daily1"
-      enabled     = false
-      run_on      = ""
-    },
-    {
-      name        = "Runbook4-Weekly1"
-      frequency   = "Week"
-      interval    = 1
-      start_time  = "2024-09-19T01:00:00+10:00"
-      description = "Runbook4-Weekly1"
-      enabled     = true
-      run_on      = ""
-    },
-    {
       name        = "Runbook4-Weekly2"
       frequency   = "Week"
       interval    = 1
