@@ -15,27 +15,6 @@ module "Runbook4" {
     runbook_type = "PowerShell72"
   }
 
-  schedules = [
-    {
-      name        = "Runbook4-Weekly2"
-      frequency   = "Week"
-      interval    = 1
-      start_time  = "2024-09-19T01:00:00+10:00"
-      description = "Runbook4-Weekly2"
-      week_days   = ["Monday", "Friday"]
-      run_on      = ""
-    },
-    {
-      name        = "Runbook4-Weekly3"
-      frequency   = "Week"
-      interval    = 1
-      start_time  = "2024-09-19T01:00:00+10:00"
-      description = "Runbook4-Weekly3"
-      week_days   = ["Tuesday", "Friday"]
-      run_on      = ""
-    }
-  ]
-
   automation_variables = [
     {
       name      = "Runbook4-Environment"
